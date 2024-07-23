@@ -53,8 +53,9 @@ std::vector<int> Congruence_equation(int a, int b, int m){
         return Solution;
     } else{// 利用欧几里得算法找d个模m不同余的解
         DiophantineSolution ans = Diophantine_equation(a, -m, b);
+        int k;
         for (int i = 0; i < d; ++i){
-            Solution.push_back(ans.x0 + i * m / d);
+            Solution.push_back((k = ans.x0 + i * m / d) <= m ? k : k - m);
         }
         return Solution;
     }
