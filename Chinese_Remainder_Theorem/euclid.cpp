@@ -1,7 +1,9 @@
 #include <iostream>
+#include <vector>
 #include "euclid.h"
 
 extern Combine;
+extern DiophantineSolution;
 // 欧几里得算法求解最大公因数
 int euclidean(int a, int b){
     int r;
@@ -28,4 +30,32 @@ Combine Extended_euclidean(int a, int b){
         b = r;
     }
     return Combine {s2, t2};
+}
+// 求解线性丢番图方程 ax+by=c
+DiophantineSolution Diophantine_equation(int a, int b, int c){
+    int d = euclidean(a, b);
+    if(c % d != 0){
+        return DiophantineSolution {-1, -1, -1, -1};
+    } else{
+        Combine ParticularSolution = Extended_euclidean(a, b);
+        ParticularSolution.c1 *= (c / d);
+        ParticularSolution.c2 *= (c / d);
+        DiophantineSolution ans =
+                {ParticularSolution.c1, ParticularSolution.c2, b/d, -(a/d)};
+        return ans;
+    }
+}
+// 求解同余方程 ax和b模m同余
+std::vector<int> Congruence_equation(int a, int b, int m){
+    int d = euclidean(a, m);
+    std::vector<int> Solution;
+    if(b % d != 0){
+        return Solution;
+    } else{// 利用欧几里得算法找d个模m不同余的解
+        DiophantineSolution ans = Diophantine_equation(a, -m, b);
+        for (int i = 0; i < d; ++i){
+            Solution.push_back(ans.x0 + i * m / d);
+        }
+        return Solution;
+    }
 }
