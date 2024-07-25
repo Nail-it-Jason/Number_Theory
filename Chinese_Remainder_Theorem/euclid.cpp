@@ -60,3 +60,18 @@ std::vector<int> Congruence_equation(int a, int b, int m){
         return Solution;
     }
 }
+// 利用Pollard rho算法尝试找到n的一个的因子
+int Pollard_rho(int n, int seed){
+    //使用多项式x^2+1
+    int d = 1, x = seed, cnt = 0;
+    std::vector<int> s{x};
+    while(d == 1){
+        x = f(x) % n;
+        s.push_back(x);
+        x = f(x) % n;
+        s.push_back(x);
+        d = euclidean(s[2*cnt+1] - s[cnt], n);
+        ++cnt;
+    }
+    return d > 0 ? d : -d;
+}
